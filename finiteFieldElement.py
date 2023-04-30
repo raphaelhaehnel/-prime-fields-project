@@ -124,7 +124,18 @@ class FiniteFieldElement:
         pass
 
     def mult_order(self):
-        pass
+        multiplicator = self.matrix
+
+        i = 0
+        while not np.all(multiplicator == self.field.identity):
+            multiplicator = (multiplicator @ self.matrix) % self.field.p
+            i += 1
+
+            if i >= self.field.p ** self.field.n:
+                error = f"The multiplication order is too big (> {self.field.p ** self.field.n} = self.field.p ** self.field.n)"
+                raise TypeError(error)
+
+        return i
 
 
 if __name__ == "__main__":
@@ -135,8 +146,8 @@ if __name__ == "__main__":
     matrix1 = a.to_matrix()
 
     # Exemple 2
-    ff2 = FiniteField(13, [11, 0, 2, 0, 1])
-    b = FiniteFieldElement([5, 2, 6, 4], ff2)
+    ff2 = FiniteField(3, [2, 0, 0, 2, 1])
+    b = FiniteFieldElement([1, 2, 0, 1], ff2)
     matrix2 = b.to_matrix()
 
     # Exemple 3
@@ -144,3 +155,4 @@ if __name__ == "__main__":
     d = FiniteFieldElement([0, 45, 40], ff1)
 
     result = c + d
+    a.mult_order()

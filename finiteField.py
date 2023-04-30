@@ -35,6 +35,7 @@ class FiniteField:
         self.n = len(f_coeffs) - 1  # degree of f(x)
         self.root = self.__find_root()
         self.residue = self.__find_residue()
+        self.identity = np.identity(self.n, dtype=self.type)
 
         if self.n == 2 or self.n == 3:
             if self.__has_root():
