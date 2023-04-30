@@ -148,6 +148,19 @@ class FiniteFieldElement:
 
         return i
 
+    def __repr__(self):
+        representation = ""
+        for i in range(self.n+1):
+            if self.coeffs[-1-i] == 0:
+                continue
+            if self.n-i == 1:
+                representation += f"{self.coeffs[-1-i]}*x + "
+            elif self.n-i == 0:
+                representation += f"{self.coeffs[-1-i]}"
+            else:
+                representation += f"{self.coeffs[-1-i]}*x^{self.n-i} + "
+        return representation
+
 
 if __name__ == "__main__":
 
