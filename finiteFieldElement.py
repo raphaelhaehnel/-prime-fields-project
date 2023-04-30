@@ -117,13 +117,24 @@ class FiniteFieldElement:
 
         return output
 
-    def __truediv__(self, other):
-        pass
+    def __truediv__(self, other):  # TODO non checked
 
-    def __pow__(self, other):
-        pass
+        if not self.isvalid(other):
+            return
 
-    def mult_order(self):
+        inverse = np.linalg.inv(other.matrix)
+        result = self.matrix @ inverse
+        return self.__class__(result[0, :], self.field)
+
+    def __pow__(self, other):  # TODO non checked
+        if not isinstance(other, int):
+            error = f"The exponent has to be int (instead of {other.type})"
+            raise TypeError(error)
+
+        result = np.linalg.matrix_power(self.matrix, other)
+        return self.__class__(result[0, :], self.field)
+
+    def mult_order(self):  # TODO half checked
         multiplicator = self.matrix
 
         i = 0
