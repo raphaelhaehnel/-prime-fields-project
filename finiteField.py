@@ -37,6 +37,8 @@ class FiniteField:
         self.residue = self.__find_residue()
         self.identity = np.identity(self.n, dtype=self.type)
 
+        # If the degree of the polynom is 2 or 3, we want to check its roots and raise an error if the
+        # polynom has roots
         if self.n == 2 or self.n == 3:
             if self.__has_root():
                 error = f"f(x) is not irreducible in k"
@@ -61,13 +63,23 @@ class FiniteField:
         return False
 
     def __find_residue(self):
+        """
+        Find the residue of the polynomial equation
+        If f(x) = x^2+bx+c = 0, returns (-bx-c) % p
+        """
 
         return (- self.f_coeffs[:-1] + self.p) % self.p
 
     def __eq__(self, other):
+        """
+        Overloading the == operator
+        """
         return self.f_coeffs == other.f_coeffs and self.p == other.p
 
     def __ne__(self, other):
+        """
+        Overloading the != operator
+        """
         return not (self == other)
 
     def __find_root(self):
