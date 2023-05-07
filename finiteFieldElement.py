@@ -152,8 +152,7 @@ class FiniteFieldElement:
             raise TypeError(error)
 
         if other < 0:
-            result = np.linalg.matrix_power(
-                self.inverse.matrix, -other) % self.field.p
+            return self.inverse() ** (-other)
 
         multiplicator = self.matrix
         for i in range(other - 1):
