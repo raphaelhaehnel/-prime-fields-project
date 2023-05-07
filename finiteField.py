@@ -76,5 +76,14 @@ class FiniteField:
         """
         return np.roots(self.f_coeffs[::-1])
 
+    def multiplicative_group(self):
+        pass
+        # alpha = FiniteFieldElement(np.array(), self)
 
-pass
+        # tmp_dict = {}
+        # res = a
+        # for i in range(p_n):
+        #     if (res * a) % p == res:
+        #         return False
+        #     res = (res * a) % p
+        # return True

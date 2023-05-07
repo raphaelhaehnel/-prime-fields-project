@@ -1,6 +1,7 @@
 from typing import List
 import numpy as np
 from finiteField import FiniteField
+import math
 
 
 class FiniteFieldElement:
@@ -122,22 +123,34 @@ class FiniteFieldElement:
         if not self.isvalid(other):
             return
 
-        inverse = np.linalg.inv(other.matrix)
+        inverse = np.linalg.inv(other.matrix)  # TODO this line is wrong
+
         result = self.matrix @ inverse
         return self.__class__(result[0, :], self.field)
 
-    def __pow__(self, other):  # TODO non checked
+    def inverse(self):
+        inv = self ** (self.mult_order() - 1)
+        return inv
+
+    def __pow__(self, other):
         if not isinstance(other, int):
             error = f"The exponent has to be int (instead of {other.type})"
             raise TypeError(error)
 
-        result = np.linalg.matrix_power(self.matrix, other)
-        return self.__class__(result[0, :], self.field)
+        if other < 0:
+            result = np.linalg.matrix_power(
+                self.inverse.matrix, -other) % self.field.p
 
-    def mult_order(self):  # TODO half checked
+        multiplicator = self.matrix
+        for i in range(other - 1):
+            multiplicator = (multiplicator @ self.matrix) % self.field.p
+
+        return self.__class__(multiplicator[0, :], self.field)
+
+    def mult_order(self):  # TODO non-checked method
         multiplicator = self.matrix
 
-        i = 0
+        i = 1
         while not np.all(multiplicator == self.field.identity):
             multiplicator = (multiplicator @ self.matrix) % self.field.p
             i += 1
@@ -162,6 +175,26 @@ class FiniteFieldElement:
         return representation
 
 
+def BSGS(g: FiniteFieldElement, h: FiniteFieldElement):
+    """
+    This method is using the BSGS algorithm to solve the discrete logarithm problem
+    """
+
+    m = math.ceil(math.sqrt(g.field.p - 1))
+
+    hash_table = {}
+    iterator = 1
+
+    for i in range(m):  # Giant steps
+        hash_table[h * g**(-m*i)] = i
+
+    for j in range(m):  # Baby steps
+        if (iterator in hash_table):
+            i = hash_table[iterator]
+            return j + i*m
+        iterator *= g
+
+
 if __name__ == "__main__":
 
     # Exemple 1
@@ -180,3 +213,8 @@ if __name__ == "__main__":
 
     result = c + d
     a.mult_order()
+
+    g = c
+    h = c ** 41
+
+    BSGS(g, h)
