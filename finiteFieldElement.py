@@ -26,19 +26,18 @@ class FiniteFieldElement:
         """
 
         # Check if the other object is not a FiniteFieldElement object
-        if not isinstance(other, FiniteFieldElement):
-            error = f"Cannot add with non-FiniteFieldElement objects"
-            raise ValueError(error)
-
-        if self.field != other.field:
-            error = f"Cannot add FiniteFieldElement objects from different fields"
-            raise ValueError(error)
+        if not self.isvalid(other):
+            return
 
         new_coeff = (self.coeffs + other.coeffs) % self.field.p
 
         return self.__class__(new_coeff, self.field)
 
     def to_matrix(self):
+        """
+        This method convert the polynomial form to a matrix form according to the method we learned in class
+        It uses recursion to find the matrix for all degree n
+        """
 
         # Initialize the helper matrix
         helper = np.zeros((self.n+1, 2*self.n+1), dtype=self.field.type)
@@ -54,6 +53,9 @@ class FiniteFieldElement:
         return helper[:, :self.n+1] % self.field.p
 
     def __to_matrix_helper(self, helper, i):
+        """
+        We call this method to find the matrix corresponding to the polynom by calling this method recursively
+        """
 
         if i < 0:
             return helper
@@ -74,6 +76,9 @@ class FiniteFieldElement:
         return self.__to_matrix_helper(helper, i-1)
 
     def isvalid(self, other):
+        """
+        Check if the other object is FiniteFieldElement, is p is the same and if f(x) is the same
+        """
         if not isinstance(other, FiniteFieldElement):
             error = f"The second element is not a FiniteFieldElement object"
             raise TypeError(error)
@@ -89,7 +94,9 @@ class FiniteFieldElement:
         return True
 
     def __add__(self, other):
-
+        """
+        Overload the + operator
+        """
         if not self.isvalid(other):
             return
 
@@ -99,7 +106,9 @@ class FiniteFieldElement:
         return output
 
     def __sub__(self, other):
-
+        """
+        Overload the - operator
+        """
         if not self.isvalid(other):
             return
 
@@ -109,6 +118,9 @@ class FiniteFieldElement:
         return output
 
     def __mul__(self, other):
+        """
+        Overload the * operator
+        """
 
         if not self.isvalid(other):
             return
@@ -119,7 +131,9 @@ class FiniteFieldElement:
         return output
 
     def __truediv__(self, other):  # TODO non checked
-
+        """
+        Overload the / operator
+        """
         if not self.isvalid(other):
             return
 
@@ -162,6 +176,9 @@ class FiniteFieldElement:
         return i
 
     def __repr__(self):
+        """
+        The object is represented by the string of the form "ax^2+bx+c"
+        """
         representation = ""
         for i in range(self.n+1):
             if self.coeffs[-1-i] == 0:
