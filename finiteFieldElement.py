@@ -137,9 +137,7 @@ class FiniteFieldElement:
         if not self.isvalid(other):
             return
 
-        inverse = np.linalg.inv(other.matrix)  # TODO this line is wrong
-
-        result = self.matrix @ inverse
+        result = self.matrix @ other.inverse().matrix % self.field.p
         return self.__class__(result[0, :], self.field)
 
     def inverse(self):
@@ -190,8 +188,11 @@ class FiniteFieldElement:
                 representation += f"{self.coeffs[-1-i]}*x^{self.n-i} + "
         return representation
 
+    def __hash__(self):
+        return hash(str(self.coeffs.tolist()))
 
-def BSGS(g: FiniteFieldElement, h: FiniteFieldElement):
+
+def BSGS(g: FiniteFieldElement, h: FiniteFieldElement):  # TODO not checked !
     """
     This method is using the BSGS algorithm to solve the discrete logarithm problem
     """
@@ -199,7 +200,7 @@ def BSGS(g: FiniteFieldElement, h: FiniteFieldElement):
     m = math.ceil(math.sqrt(g.field.p - 1))
 
     hash_table = {}
-    iterator = 1
+    iterator = FiniteFieldElement(g.field.identity[0, :], g.field)
 
     for i in range(m):  # Giant steps
         hash_table[h * g**(-m*i)] = i
@@ -208,7 +209,8 @@ def BSGS(g: FiniteFieldElement, h: FiniteFieldElement):
         if (iterator in hash_table):
             i = hash_table[iterator]
             return j + i*m
-        iterator *= g
+        iterator = iterator * g
+    return None
 
 
 if __name__ == "__main__":
@@ -231,6 +233,7 @@ if __name__ == "__main__":
     a.mult_order()
 
     g = c
-    h = c ** 41
+    h = c ** 4
 
-    BSGS(g, h)
+    result = BSGS(d, d ** 8)
+    ff1.multiplicative_group()

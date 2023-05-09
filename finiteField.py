@@ -89,8 +89,26 @@ class FiniteField:
         return np.roots(self.f_coeffs[::-1])
 
     def multiplicative_group(self):
-        pass
-        # alpha = FiniteFieldElement(np.array(), self)
+        from finiteFieldElement import FiniteFieldElement
+
+        # Stopping condition
+        i = 0
+
+        coeffs = np.random.randint(0, self.p, size=(self.n))
+        alpha = FiniteFieldElement(coeffs, self)
+
+        while i < np.ceil(np.sqrt(self.p ** self.n)):
+
+            if alpha.mult_order() == self.p ** self.n:
+                return alpha
+
+            coeffs = np.random.randint(0, self.p, size=(self.n))
+            alpha = FiniteFieldElement(coeffs, self)
+
+            i += 1
+
+        error = f"The generator of the multiplicative group has not be found"
+        raise ValueError(error)
 
         # tmp_dict = {}
         # res = a
