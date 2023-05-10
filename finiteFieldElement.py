@@ -162,11 +162,15 @@ class FiniteFieldElement:
         multiplicator = self.matrix
 
         i = 1
+
+        # Multiply the element with itself until it is equal to 1 (identity matrix)
         while not np.all(multiplicator == self.field.identity):
+
             multiplicator = (multiplicator @ self.matrix) % self.field.p
             i += 1
+            # print(self.__class__(multiplicator[0, :], self.field))
 
-            if i >= self.field.p ** self.field.n:
+            if i > self.field.p ** self.field.n:
                 error = f"The multiplication order is too big (> {self.field.p ** self.field.n} = self.field.p ** self.field.n)"
                 raise TypeError(error)
 
@@ -221,9 +225,19 @@ if __name__ == "__main__":
     matrix1 = a.to_matrix()
 
     # Exemple 2
-    ff2 = FiniteField(3, [2, 0, 0, 2, 1])
-    b = FiniteFieldElement([1, 2, 0, 1], ff2)
+    ff2 = FiniteField(3, [1, 2, 0, 1])
+    b = FiniteFieldElement([1, 1, 0], ff2)
     matrix2 = b.to_matrix()
+
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                if i == 0 and j == 0 and k == 0:
+                    continue
+                alpha = FiniteFieldElement([k, j, i], ff2)
+                print(f"{alpha} : order {alpha.mult_order()}")
+
+    print(f"Element generator of ff2: {ff2.multiplicative_group()}")
 
     # Exemple 3
     c = FiniteFieldElement([3, 10, 1], ff1)
@@ -235,5 +249,4 @@ if __name__ == "__main__":
     g = c
     h = c ** 4
 
-    result = BSGS(d, d ** 8)
-    ff1.multiplicative_group()
+    result = BSGS(b, b ** 8)

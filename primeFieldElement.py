@@ -126,6 +126,7 @@ class PrimeFieldElement:
         Compute the inverse of the object according to the field logic
         """
 
+        # TODO Implement the extended euclidean algortihm
         for i in range(1, self.p):
             if (self.a * i) % self.p == 1:
                 return self.__class__(i, self.p)

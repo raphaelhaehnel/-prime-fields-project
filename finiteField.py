@@ -99,10 +99,15 @@ class FiniteField:
 
         while i < np.ceil(np.sqrt(self.p ** self.n)):
 
-            if alpha.mult_order() == self.p ** self.n:
+            if alpha.mult_order() == self.p ** self.n - 1:
                 return alpha
 
             coeffs = np.random.randint(0, self.p, size=(self.n))
+
+            # If we already computed the multiplicative order with these coefficients,
+            # we need to find other coefficients
+            # TODO
+
             alpha = FiniteFieldElement(coeffs, self)
 
             i += 1
