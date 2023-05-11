@@ -223,7 +223,7 @@ def BSGS(g: FiniteFieldElement, h: FiniteFieldElement):  # TODO not checked !
     for j in range(m):  # Baby steps
         if (iterator in hash_table):
             i = hash_table[iterator]
-            return j + i*m
+            return (j + i*m) % (g.field.p ** g.field.n - 1)
         iterator = iterator * g
     return None
 
@@ -237,7 +237,7 @@ if __name__ == "__main__":
 
     # Exemple 2
     ff2 = FiniteField(3, [1, 2, 0, 1])
-    b = FiniteFieldElement([1, 1, 0], ff2)
+    b = FiniteFieldElement([2, 2, 1], ff2)
     matrix2 = b.to_matrix()
 
     for i in range(3):
@@ -260,7 +260,7 @@ if __name__ == "__main__":
     g = c
     h = c ** 4
 
-    result = BSGS(b, b ** 4)
-    # Powers 4 and 5 doesnt work. We need to check:
-    # 1) Are these two the only ones for which the iterator is equal to 1 when it returns the BSGS ?
-    #
+    for i in range(27):
+        print(f"BSGS(b, b ** {i}) = {BSGS(b, b ** i)}")
+
+    print("Hello world!")
