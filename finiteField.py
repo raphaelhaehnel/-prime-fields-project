@@ -74,39 +74,61 @@ class FiniteField:
         """
         Overloading the == operator
         """
+
         return all(self.f_coeffs == other.f_coeffs) and self.p == other.p
 
     def __ne__(self, other):
         """
         Overloading the != operator
         """
+
         return not (self == other)
 
     def __find_root(self):
         """
         Find the root of f(x) (not in k)
         """
+
         return np.roots(self.f_coeffs[::-1])
 
     def multiplicative_group(self):
+        """
+        Finds a generator gamma of the multiplicative group l*, which we know is cyclic
+        """
+
+        # We import FiniteFieldElement inside the method to prevent circular imports
         from finiteFieldElement import FiniteFieldElement
 
         # Stopping condition
         i = 0
 
+        # To find the generative element, we pick random elements until we find it.
+        # In order to pick another random element that we have not encountered so far,
+        # we have to define a set that will remember all the elements we picked.
+        history = set()
+
+        # Generates a list of random coefficients
         coeffs = np.random.randint(0, self.p, size=(self.n))
+
+        # Add the coefficients to the list
+        history.add(str(coeffs))
+
         alpha = FiniteFieldElement(coeffs, self)
 
         while i < np.ceil(np.sqrt(self.p ** self.n)):
 
+            # If the multiplication order of the elements equals to the size of the field minus one,
+            # then it is a generator.
             if alpha.mult_order() == self.p ** self.n - 1:
                 return alpha
 
             coeffs = np.random.randint(0, self.p, size=(self.n))
 
-            # If we already computed the multiplicative order with these coefficients,
-            # we need to find other coefficients
-            # TODO
+            # If we already picked these coefficients, computes other coefficients
+            while str(coeffs) in history:
+                coeffs = np.random.randint(0, self.p, size=(self.n))
+
+            history.add(str(coeffs))
 
             alpha = FiniteFieldElement(coeffs, self)
 
@@ -114,11 +136,3 @@ class FiniteField:
 
         error = f"The generator of the multiplicative group has not be found"
         raise ValueError(error)
-
-        # tmp_dict = {}
-        # res = a
-        # for i in range(p_n):
-        #     if (res * a) % p == res:
-        #         return False
-        #     res = (res * a) % p
-        # return True

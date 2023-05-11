@@ -1,0 +1,8 @@
+PROJECT IN ADVANCED ALGEBRA
+83-804
+2023
+
+Participants:
+
+Raphael Haehnel - 341142107
+Itay Cohen - 201103579

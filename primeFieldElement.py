@@ -126,26 +126,21 @@ class PrimeFieldElement:
         Compute the inverse of the object according to the field logic
         """
 
-        # TODO Implement the extended euclidean algortihm
         for i in range(1, self.p):
             if (self.a * i) % self.p == 1:
                 return self.__class__(i, self.p)
         error = f"Cannot find inverse for {self.a} in PrimeField {self.p}"
         raise TypeError(error)
 
-    def gcdExtended(self, a, b):
-        # Base Case
-        if a == 0:
-            return b, 0, 1
-
-        gcd, x1, y1 = self.gcdExtended(b % a, a)
-
-        # Update x and y using results of recursive
-        # call
-        x = y1 - (b//a) * x1
-        y = x1
-
-        return gcd, x, y
-
     def __repr__(self):
+        """
+        The object is represented by his element as an integer
+        """
+
         return str(self.a)
+
+
+if __name__ == "__main__":
+    a = PrimeFieldElement(5, 7)
+    b = PrimeFieldElement(2, 7)
+    print("Hello World!")
