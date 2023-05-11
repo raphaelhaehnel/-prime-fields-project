@@ -152,6 +152,9 @@ class FiniteFieldElement:
         if other < 0:
             return self.inverse() ** (-other)
 
+        if other == 0:
+            return self.__class__(self.field.identity[0, :], self.field)
+
         multiplicator = self.matrix
         for i in range(other - 1):
             multiplicator = (multiplicator @ self.matrix) % self.field.p
@@ -182,18 +185,26 @@ class FiniteFieldElement:
         """
         representation = ""
         for i in range(self.n+1):
+            coeff = "" if self.coeffs[-1-i] == 1 else self.coeffs[-1-i]
             if self.coeffs[-1-i] == 0:
                 continue
             if self.n-i == 1:
-                representation += f"{self.coeffs[-1-i]}*x + "
+                representation += f"{coeff}x + "
             elif self.n-i == 0:
-                representation += f"{self.coeffs[-1-i]}"
+                representation += f"{self.coeffs[-1-i]} + "
             else:
-                representation += f"{self.coeffs[-1-i]}*x^{self.n-i} + "
+                representation += f"{coeff}x^{self.n-i} + "
+
+        if representation[-2:] == "+ ":
+            representation = representation[:-2]
+
         return representation
 
     def __hash__(self):
         return hash(str(self.coeffs.tolist()))
+
+    def __eq__(self, other):
+        return all(self.coeffs == other.coeffs) and self.field == other.field
 
 
 def BSGS(g: FiniteFieldElement, h: FiniteFieldElement):  # TODO not checked !
@@ -201,7 +212,7 @@ def BSGS(g: FiniteFieldElement, h: FiniteFieldElement):  # TODO not checked !
     This method is using the BSGS algorithm to solve the discrete logarithm problem
     """
 
-    m = math.ceil(math.sqrt(g.field.p - 1))
+    m = math.ceil(math.sqrt(g.field.p ** g.field.n - 1))
 
     hash_table = {}
     iterator = FiniteFieldElement(g.field.identity[0, :], g.field)
@@ -249,4 +260,7 @@ if __name__ == "__main__":
     g = c
     h = c ** 4
 
-    result = BSGS(b, b ** 8)
+    result = BSGS(b, b ** 4)
+    # Powers 4 and 5 doesnt work. We need to check:
+    # 1) Are these two the only ones for which the iterator is equal to 1 when it returns the BSGS ?
+    #

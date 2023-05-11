@@ -74,7 +74,7 @@ class FiniteField:
         """
         Overloading the == operator
         """
-        return self.f_coeffs == other.f_coeffs and self.p == other.p
+        return all(self.f_coeffs == other.f_coeffs) and self.p == other.p
 
     def __ne__(self, other):
         """
