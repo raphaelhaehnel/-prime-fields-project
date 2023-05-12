@@ -1,4 +1,4 @@
-PROJECT IN ADVANCED ALGEBRA
+# PROJECT IN ADVANCED ALGEBRA
 
 This project has been done as end work for the course "Advanced Algebra" in Bar-Ilan University.
 2023, first semester.
