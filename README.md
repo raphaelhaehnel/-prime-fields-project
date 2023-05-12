@@ -7,8 +7,8 @@ The aim of this project is to implement finite fields of cardinality $`p^n`$ for
 
 We have that $`l \cong k[x]/\langle f(x)\rangle`$
 
-**PrimeFieldElement** represents an element $`a`$. in the field $`k=F_p`$, where $`F_p`$ is the prime field
+**PrimeFieldElement** represents an element $`a`$ in the field $`k=F_p`$ where $`F_p`$ is the prime field
 
-**FiniteField**
+**FiniteField** represents the field $`l \cong k[x]/\langle f(x)\rangle`$
 
-**FiniteFieldElement**
+**FiniteFieldElement** represents an element $`\alpha`$ from the field $`l \cong k[x]/\langle f(x)\rangle`$
