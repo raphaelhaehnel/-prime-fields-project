@@ -15,5 +15,5 @@ We have that $`l \cong k[x]/\langle f(x)\rangle`$
 
 ### Participants:
 
-**Raphael Haehnel** - 341142107
+**Raphael Haehnel** - 341142107  
 **Itay Cohen** - 201103579
