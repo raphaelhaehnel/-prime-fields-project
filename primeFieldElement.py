@@ -121,16 +121,38 @@ class PrimeFieldElement:
         result = (self.a ** exp) % self.p
         return self.__class__(result, self.p)
 
+    def __gcdExtended(self, a, b):
+        """
+        Function for extended Euclidean Algorithm
+        """
+
+        # Base Case
+        if a == 0:
+            return b, 0, 1
+
+        gcd, x1, y1 = self.__gcdExtended(b % a, a)
+
+        # Update x and y using results of recursive call
+        x = y1 - (b//a) * x1
+        y = x1
+
+        return gcd, x, y
+
     def inverse(self):
         """
         Compute the inverse of the object according to the field logic
         """
+        gcd, x, y = self.__gcdExtended(self.a, self.p)
 
-        for i in range(1, self.p):
-            if (self.a * i) % self.p == 1:
-                return self.__class__(i, self.p)
-        error = f"Cannot find inverse for {self.a} in PrimeField {self.p}"
-        raise TypeError(error)
+        if gcd == self.p:
+            error = f"{self.a} does not have an inverse in k"
+            raise ValueError(error)
+
+        if gcd == 1:
+            return self.__class__(x % self.p, self.p)
+
+        error = f"The Euclidean algorithm didn't work with this element"
+        raise ValueError(error)
 
     def __repr__(self):
         """
@@ -141,6 +163,6 @@ class PrimeFieldElement:
 
 
 if __name__ == "__main__":
-    a = PrimeFieldElement(5, 7)
-    b = PrimeFieldElement(2, 7)
+    a = PrimeFieldElement(a=5, p=7)
+    b = PrimeFieldElement(a=2, p=7)
     print("Hello World!")

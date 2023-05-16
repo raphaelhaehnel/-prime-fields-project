@@ -1,21 +1,37 @@
-import numpy as np
-import matplotlib.pyplot as plt
+# Python program to demonstrate working of extended
+# Euclidean Algorithm
 
-# Define the mean and covariance matrix
-mu = np.array([0, 0])
-cov = np.array([[1, 0], [0, 1]])
+# function for extended Euclidean Algorithm
+def gcdExtended(a, b):
+    # Base Case
+    if a == 0:
+        return b, 0, 1
 
-# Create a meshgrid of x and y values
-x, y = np.meshgrid(np.linspace(-3, 3, 100), np.linspace(-3, 3, 100))
+    gcd, x1, y1 = gcdExtended(b % a, a)
 
-# Create a 2D Gaussian distribution
-pos = np.empty(x.shape + (2,))
-pos[:, :, 0] = x
-pos[:, :, 1] = y
-z = np.exp(-0.5 * np.sum((pos - mu) @ np.linalg.inv(cov) * (pos - mu),
-           axis=2)) / (2 * np.pi * np.sqrt(np.linalg.det(cov)))
+    # Update x and y using results of recursive
+    # call
+    x = y1 - (b//a) * x1
+    y = x1
 
-# Plot the distribution
-plt.contourf(x, y, z)
-plt.colorbar()
-plt.show()
+    return gcd, x, y
+
+
+def inverse(a, p):
+    gcd, x, y = gcdExtended(a, p)
+
+    if gcd == p:
+        error = f"{a} does not have an inverse in k"
+        raise ValueError(error)
+
+    if gcd == 1:
+        return x % p
+
+    error = f"The Euclidean algorithm didn't work with this element"
+    raise ValueError(error)
+
+
+# Driver code
+a, b = 3, 7
+g, x, y = gcdExtended(a, b)
+print(f"{a}^-1 ={x % b}")
