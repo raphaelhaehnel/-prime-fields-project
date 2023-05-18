@@ -91,6 +91,9 @@ class FiniteField:
 
         return np.roots(self.f_coeffs[::-1])
 
+    def __repr__(self):
+        return f"Finite field p={self.p}, f(x)={self.f_coeffs}"
+
     def multiplicative_group(self):
         """
         Finds a generator gamma of the multiplicative group l*, which we know is cyclic

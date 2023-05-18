@@ -14,14 +14,17 @@ class Choice:
     PRIMEFIELDELEMENT = 1
     FINITEFIELD = 2
     FINITEFIELDELEMENT = 3
+    EXECUTE = 4
 
 
 WELCOME_MESSAGE = "Welcome to the user interface of the Advanced Algebra project !"
 ASK_INPUT = "Please choose the action your want to do"
 ACTION_LIST = "(1) - Create a new PrimeFieldElement\n\
 (2) - Create a new FiniteField\n\
-(3) - Create a new FiniteFieldElement"
+(3) - Create a new FiniteFieldElement\n\
+(4) - Execute an operation"
 NOT_DEFINED = "Not defined action"
+AVAILABLE_FIELDS = "Availables fields:"
 
 
 def get_user_choice() -> int:
@@ -30,7 +33,7 @@ def get_user_choice() -> int:
         try:
             action = input()
             action = int(action)
-            if action not in [Choice.FINITEFIELD, Choice.FINITEFIELDELEMENT, Choice.PRIMEFIELDELEMENT]:
+            if action not in [Choice.FINITEFIELD, Choice.FINITEFIELDELEMENT, Choice.PRIMEFIELDELEMENT, Choice.EXECUTE]:
                 raise ValueError()
 
             valid = True
@@ -124,9 +127,28 @@ while running:
         print("Enter the function coefficients:", end=" ")
         f_coeffs = get_list()
         alpha = FiniteField(p, f_coeffs)
-        list_FF_element.append(alpha)
+        list_FF.append(alpha)
 
     # Creation of a FiniteFieldElement object
     elif choice == Choice.FINITEFIELDELEMENT:
         if not len(list_FF):
             print("No Finite Field defined: you cannot define a FiniteFieldElement")
+            continue
+        print(AVAILABLE_FIELDS)
+        for i in range(len(list_FF)):
+            print(f"({i}) {list_FF[i]}")
+        print("Enter the element coefficients:", end=" ")
+        coeffs = get_list()
+        print("Enter field number")
+        n = get_integer()
+        if n < 0 or n > len(list_FF):
+            print("Index not valid")
+            continue
+        alpha = FiniteFieldElement(coeffs, list_FF[n])
+        list_FF_element.append(alpha)
+
+    elif choice == Choice.EXECUTE:
+        command = input("Enter a Python command: ")
+        out = None
+        exec(f"out = {command}")
+        print(out)
