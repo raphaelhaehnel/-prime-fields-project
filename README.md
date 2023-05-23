@@ -9,7 +9,7 @@ We have that $`l \cong k[x]/\langle f(x)\rangle`$
 
 **PrimeFieldElement** represents an element $`a`$ in the field $`k=\mathbb{F}_p`$ where $`\mathbb{F}_p`$ is the prime field
 
-**FiniteField** represents the field $`l \cong k[x]/\langle f(x)\rangle`$
+**FiniteField** represents the extended finite field $`l \cong k[x]/\langle f(x)\rangle`$
 
 **FiniteFieldElement** represents an element $`\alpha`$ from the field $`l \cong k[x]/\langle f(x)\rangle`$
 
